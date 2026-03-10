@@ -1,0 +1,40 @@
+{{ define "main" }}
+<h1 class="page-title fade-in">{{ .Title }}</h1>
+{{ with .Description }}
+<p class="page-desc fade-in">{{ . }}</p>
+{{ end }}
+
+{{ if .Pages }}
+<div class="card-list stagger-in">
+  {{ range $i, $p := .Paginator.Pages }}
+  <a href="{{ $p.Permalink }}" class="post-card fade-in" style="--i:{{ $i }}">
+    {{ with $p.Params.cover }}
+    <div class="card-cover">
+      <img src="{{ . }}" alt="{{ $p.Title }}" loading="lazy">
+    </div>
+    {{ end }}
+    <div class="card-body">
+      <div class="card-meta">
+        <time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "2006-01-02" }}</time>
+        {{ with $p.Params.categories }}
+          {{ range . }}
+          <span class="card-tag">{{ . }}</span>
+          {{ end }}
+        {{ end }}
+      </div>
+      <h3 class="card-title">{{ $p.Title }}</h3>
+      {{ with $p.Description }}
+      <p class="card-desc">{{ . | truncate 80 }}</p>
+      {{ else }}
+      <p class="card-desc">{{ $p.Summary | plainify | truncate 80 }}</p>
+      {{ end }}
+    </div>
+  </a>
+  {{ end }}
+</div>
+
+{{ template "_internal/pagination.html" . }}
+{{ else }}
+<p class="text-muted fade-in">暂无内容</p>
+{{ end }}
+{{ end }}

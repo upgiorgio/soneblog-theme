@@ -1,0 +1,72 @@
+{{ define "main" }}
+{{ $pages := where .Site.RegularPages "Section" "posts" }}
+
+{{- if $pages -}}
+  {{/* Featured: latest post as hero card */}}
+  {{ $featured := index $pages 0 }}
+  <section class="featured-post fade-in">
+    <a href="{{ $featured.Permalink }}" class="featured-card">
+      {{ with $featured.Params.cover }}
+      <div class="featured-cover">
+        <img src="{{ . }}" alt="{{ $featured.Title }}" loading="eager">
+      </div>
+      {{ end }}
+      <div class="featured-content">
+        <div class="featured-meta">
+          <time datetime="{{ $featured.Date.Format "2006-01-02" }}">{{ $featured.Date.Format "2006-01-02" }}</time>
+          {{ with $featured.Params.categories }}
+            {{ range . }}
+            <span class="card-tag">{{ . }}</span>
+            {{ end }}
+          {{ end }}
+        </div>
+        <h2 class="featured-title">{{ $featured.Title }}</h2>
+        {{ with $featured.Description }}
+        <p class="featured-desc">{{ . | truncate 120 }}</p>
+        {{ else }}
+        <p class="featured-desc">{{ $featured.Summary | plainify | truncate 120 }}</p>
+        {{ end }}
+        <span class="featured-read">阅读全文 &rarr;</span>
+      </div>
+    </a>
+  </section>
+
+  {{/* Rest: compact card list */}}
+  {{ $rest := after 1 $pages }}
+  {{ if $rest }}
+  <section class="post-cards stagger-in">
+    <h2 class="section-heading fade-in">全部文章</h2>
+    <div class="card-list">
+      {{ range $i, $p := $rest }}
+      <a href="{{ $p.Permalink }}" class="post-card fade-in" style="--i:{{ $i }}">
+        {{ with $p.Params.cover }}
+        <div class="card-cover">
+          <img src="{{ . }}" alt="{{ $p.Title }}" loading="lazy">
+        </div>
+        {{ end }}
+        <div class="card-body">
+          <div class="card-meta">
+            <time datetime="{{ $p.Date.Format "2006-01-02" }}">{{ $p.Date.Format "2006-01-02" }}</time>
+            {{ with $p.Params.categories }}
+              {{ range . }}
+              <span class="card-tag">{{ . }}</span>
+              {{ end }}
+            {{ end }}
+          </div>
+          <h3 class="card-title">{{ $p.Title }}</h3>
+          {{ with $p.Description }}
+          <p class="card-desc">{{ . | truncate 80 }}</p>
+          {{ else }}
+          <p class="card-desc">{{ $p.Summary | plainify | truncate 80 }}</p>
+          {{ end }}
+        </div>
+      </a>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+{{- else -}}
+<p class="text-muted fade-in">即将上线，敬请期待</p>
+{{- end -}}
+{{ end }}

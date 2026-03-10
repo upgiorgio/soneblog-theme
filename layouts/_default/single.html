@@ -1,0 +1,68 @@
+{{ define "main" }}
+{{- partial "breadcrumb.html" . -}}
+<article class="fade-in">
+  <!-- Cover Image -->
+  {{ with .Params.cover }}
+  <div class="article-cover fade-in">
+    <img src="{{ . }}" alt="{{ $.Title }}">
+  </div>
+  {{ end }}
+
+  <!-- Header -->
+  <div class="article-header fade-in" style="--i:1">
+    <div class="article-meta">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+      <span>{{ .ReadingTime }} 分钟</span>
+      <span>{{ .WordCount }} 字</span>
+    </div>
+    <h1 class="article-title">{{ .Title }}</h1>
+    {{ with .Params.categories }}
+    <div class="article-categories">
+      {{ range . }}
+      <a href="{{ printf "/categories/%s/" (. | urlize) }}" class="card-tag">{{ . }}</a>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+
+  <!-- TOC -->
+  {{ if .TableOfContents }}
+  <nav class="toc fade-in" style="--i:2">
+    <details open>
+      <summary>目录</summary>
+      {{ .TableOfContents }}
+    </details>
+  </nav>
+  {{ end }}
+
+  <!-- Body -->
+  <div class="article-body fade-in" style="--i:3">
+    {{ .Content }}
+  </div>
+
+  <!-- Tags -->
+  {{ with .Params.tags }}
+  <div class="article-tags fade-in">
+    {{ range . }}
+    <a href="{{ printf "/tags/%s/" (. | urlize) }}">#{{ . }}</a>
+    {{ end }}
+  </div>
+  {{ end }}
+
+  <!-- Prev/Next -->
+  <nav class="post-nav fade-in">
+    {{ with .PrevInSection }}
+    <a href="{{ .Permalink }}" class="post-nav-link post-nav-prev">
+      <span class="post-nav-label">上一篇</span>
+      <span class="post-nav-title">{{ .Title }}</span>
+    </a>
+    {{ else }}<span></span>{{ end }}
+    {{ with .NextInSection }}
+    <a href="{{ .Permalink }}" class="post-nav-link post-nav-next">
+      <span class="post-nav-label">下一篇</span>
+      <span class="post-nav-title">{{ .Title }}</span>
+    </a>
+    {{ else }}<span></span>{{ end }}
+  </nav>
+</article>
+{{ end }}

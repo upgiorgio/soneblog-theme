@@ -1,0 +1,7 @@
+{{ define "main" }}
+<h1 class="page-title">搜索</h1>
+<input id="search-input" type="text" placeholder="输入关键词..." class="search-input" autofocus>
+<ul id="search-results" class="search-results"></ul>
+{{ $search := resources.Get "js/search.js" | minify | fingerprint }}
+<script src="{{ $search.RelPermalink }}"></script>
+{{ end }}

@@ -1,0 +1,23 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <span class="footer-logo">{{ .Site.Title }}</span>
+        <span class="footer-copy">{{ .Site.Copyright | default "Copyright &copy; 2024 Sone Blog" }}</span>
+      </div>
+      <div class="footer-links">
+        <a href="/about/">关于</a>
+        <a href="/tags/">标签</a>
+        <a href="/categories/">分类</a>
+        {{ with .OutputFormats.Get "rss" }}
+        <a href="{{ .Permalink }}">RSS</a>
+        {{ end }}
+      </div>
+    </div>
+    <div class="footer-sub">
+      <span>Hugo + soneBlog Theme</span>
+      <span class="footer-dot">&middot;</span>
+      <span>纯 CSS, 无框架</span>
+    </div>
+  </div>
+</footer>

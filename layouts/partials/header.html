@@ -1,0 +1,28 @@
+<header class="site-header" id="site-header">
+  <div class="container">
+    <div class="header-row">
+      <a href="/" class="site-title">{{ .Site.Title }}</a>
+      <div class="header-actions">
+        <button class="theme-toggle" id="theme-toggle" aria-label="切换主题">&#x25D1;</button>
+        <button class="mobile-toggle" id="mobile-menu-btn" aria-label="菜单">&#x2261;</button>
+      </div>
+    </div>
+    <nav class="terminal-nav" id="terminal-nav">
+      {{ range .Site.Menus.main }}
+      <a href="{{ .URL }}"{{ if $.IsMenuCurrent "main" . }} class="active"{{ end }}>{{ .Name }}</a>
+      {{ end }}
+    </nav>
+  </div>
+</header>
+
+<script>
+(function() {
+  var btn = document.getElementById('mobile-menu-btn');
+  var nav = document.getElementById('terminal-nav');
+  if (btn && nav) {
+    btn.addEventListener('click', function() {
+      nav.classList.toggle('open');
+    });
+  }
+})();
+</script>

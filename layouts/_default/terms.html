@@ -1,0 +1,12 @@
+{{ define "main" }}
+<h1 class="page-title fade-in">{{ .Title }}</h1>
+
+<div class="taxonomy-grid stagger-in">
+  {{ range $i, $t := .Data.Terms.ByCount }}
+  <a href="{{ $t.Page.Permalink }}" class="taxonomy-card fade-in" style="--i:{{ $i }}">
+    <span class="taxonomy-name">{{ $t.Page.Title }}</span>
+    <span class="taxonomy-badge">{{ $t.Count }}</span>
+  </a>
+  {{ end }}
+</div>
+{{ end }}

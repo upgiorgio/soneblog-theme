@@ -1,0 +1,195 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+
+{{- $title := .Site.Title -}}
+{{- if not .IsHome -}}
+  {{- $title = printf "%s | %s" .Title .Site.Title -}}
+{{- else -}}
+  {{- $title = printf "%s — %s" .Site.Title .Site.Params.description -}}
+{{- end -}}
+<title>{{ $title }}</title>
+
+{{- $desc := .Description | default .Site.Params.description -}}
+<meta name="description" content="{{ $desc }}">
+<meta name="author" content="{{ .Site.Params.author }}">
+{{- if .IsPage }}
+{{- with .Params.keywords }}
+<meta name="keywords" content="{{ delimit . ", " }}">
+{{- end }}
+{{- end }}
+
+<!-- Open Graph -->
+<meta property="og:title" content="{{ $title }}">
+<meta property="og:description" content="{{ $desc }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ .Site.Title }}">
+<meta property="og:locale" content="zh_CN">
+{{- $ogImage := "" -}}
+{{- if .IsPage -}}
+  {{- with .Params.cover -}}
+    {{- $ogImage = (printf "%s%s" $.Site.BaseURL (strings.TrimPrefix "/" .)) -}}
+  {{- end -}}
+{{- end -}}
+{{- if $ogImage }}
+<meta property="og:image" content="{{ $ogImage }}">
+<meta property="og:image:alt" content="{{ .Title }}">
+{{- end }}
+{{- if .IsPage }}
+<meta property="article:published_time" content="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+{{- with .Lastmod }}
+<meta property="article:modified_time" content="{{ .Format "2006-01-02T15:04:05Z07:00" }}">
+{{- end }}
+<meta property="article:author" content="{{ .Site.Params.author }}">
+{{- with .Params.categories }}
+{{- range . }}
+<meta property="article:section" content="{{ . }}">
+{{- end }}
+{{- end }}
+{{- with .Params.tags }}
+{{- range . }}
+<meta property="article:tag" content="{{ . }}">
+{{- end }}
+{{- end }}
+{{- end }}
+
+<!-- Twitter -->
+<meta name="twitter:card" content="{{ if and .IsPage .Params.cover }}summary_large_image{{ else }}summary{{ end }}">
+<meta name="twitter:title" content="{{ $title }}">
+<meta name="twitter:description" content="{{ $desc }}">
+{{- if $ogImage }}
+<meta name="twitter:image" content="{{ $ogImage }}">
+{{- end }}
+
+<link rel="canonical" href="{{ .Permalink }}">
+<link rel="icon" href="/favicon.ico">
+
+<!-- Baidu Webmaster Verification (replace with real value) -->
+<meta name="baidu-site-verification" content="PLACEHOLDER_BAIDU_VERIFICATION">
+<!-- Bing Webmaster (replace with real value) -->
+<meta name="msvalidate.01" content="PLACEHOLDER_BING_VERIFICATION">
+
+{{ with .OutputFormats.Get "rss" -}}
+<link rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" href="{{ .Permalink }}">
+{{- end }}
+{{ with .OutputFormats.Get "json" -}}
+<link rel="alternate" type="application/json" title="{{ $.Site.Title }}" href="{{ .Permalink }}">
+{{- end }}
+
+<!-- DNS Prefetch & Preconnect -->
+<link rel="dns-prefetch" href="//s1.work">
+
+<!-- Font -->
+<link rel="preload" href="/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-latin.woff2') format('woff2');
+}
+</style>
+
+<!-- CSS -->
+{{ $css := resources.Get "css/main.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}">
+
+<!-- Dark mode: apply immediately to prevent flash -->
+<script>
+(function(){
+  var t = localStorage.getItem('s1-theme');
+  if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+  }
+})();
+</script>
+
+<!-- JSON-LD Structured Data -->
+{{- if .IsHome }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "{{ .Site.Title }}",
+  "url": "{{ .Site.BaseURL }}",
+  "description": "{{ .Site.Params.description }}",
+  "inLanguage": "zh-CN",
+  "publisher": {
+    "@type": "Person",
+    "name": "{{ .Site.Params.author }}"
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{{ .Site.BaseURL }}search/?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "首页",
+    "item": "{{ .Site.BaseURL }}"
+  }]
+}
+</script>
+{{- else if .IsPage }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": {{ .Permalink | jsonify }}
+  },
+  "headline": {{ .Title | jsonify }},
+  "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
+  "dateModified": "{{ .Lastmod.Format "2006-01-02T15:04:05Z07:00" }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ .Site.Params.author }}"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "{{ .Site.Params.author }}"
+  },
+  "description": {{ $desc | jsonify }},
+  "url": {{ .Permalink | jsonify }},
+  "wordCount": {{ .WordCount }},
+  "inLanguage": "zh-CN"
+  {{- with .Params.cover }},
+  "image": {
+    "@type": "ImageObject",
+    "url": "{{ printf "%s%s" $.Site.BaseURL (strings.TrimPrefix "/" .) }}"
+  }
+  {{- end }}
+  {{- with .Params.categories }},
+  "articleSection": {{ index . 0 | jsonify }}
+  {{- end }}
+  {{- with .Params.tags }},
+  "keywords": {{ delimit . ", " | jsonify }}
+  {{- end }}
+}
+</script>
+{{- else if .IsSection }}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": {{ .Title | jsonify }},
+  "url": {{ .Permalink | jsonify }},
+  "description": {{ ($desc) | jsonify }},
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "{{ .Site.Title }}",
+    "url": "{{ .Site.BaseURL }}"
+  }
+}
+</script>
+{{- end }}

@@ -1,0 +1,13 @@
+name = "soneBlog"
+license = "MIT"
+licenselink = "https://github.com/upgiorgio/soneblog-theme/blob/main/LICENSE"
+description = "A minimalist, monospace Hugo theme with HSL color system, CSS-only animations, and mouse ripple effects."
+homepage = "https://github.com/upgiorgio/soneblog-theme"
+demosite = "https://s1.work/"
+tags = ["blog", "minimal", "monospace", "dark mode", "responsive", "cjk", "chinese", "seo"]
+features = ["dark mode", "code copy", "reading progress", "back to top", "ripple effect", "breadcrumb", "seo", "fuse.js search"]
+min_version = "0.120.0"
+
+[author]
+  name = "Sone"
+  homepage = "https://s1.work/"
