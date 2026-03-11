@@ -12,11 +12,21 @@
   {{- partial "footer.html" . -}}
   <button class="back-to-top" id="back-to-top" aria-label="回到顶部">↑</button>
   <div class="reading-progress" id="reading-progress"></div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="search-overlay">
+    <div class="search-overlay-box">
+      <input id="search-overlay-input" type="text" placeholder="输入关键词，按回车搜索..." autocomplete="off">
+      <p class="search-overlay-hint" id="search-overlay-hint">按 <kbd>Enter</kbd> 搜索 · <kbd>Esc</kbd> 关闭</p>
+      <div id="search-overlay-results"></div>
+    </div>
+  </div>
+
   {{ $theme := resources.Get "js/theme.js" | minify | fingerprint }}
   <script src="{{ $theme.RelPermalink }}"></script>
   {{ $codeCopy := resources.Get "js/code-copy.js" | minify | fingerprint }}
   <script src="{{ $codeCopy.RelPermalink }}"></script>
-  {{ $ripple := resources.Get "js/ripple.js" | minify | fingerprint }}
-  <script src="{{ $ripple.RelPermalink }}" defer></script>
+  {{ $search := resources.Get "js/search.js" | minify | fingerprint }}
+  <script src="{{ $search.RelPermalink }}" defer></script>
 </body>
 </html>

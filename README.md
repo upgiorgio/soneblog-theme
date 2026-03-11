@@ -8,15 +8,26 @@ A minimalist, monospace Hugo theme. Zero frameworks, pure CSS, HSL color system.
 
 ---
 
+## Design Philosophy
+
+The best design is invisible. Readers should focus on content, not decoration.
+
+- **Subtraction first** — No flashy animations, no heavy shadows, no visual noise
+- **Natural comfort** — Warm-toned base color, generous whitespace, comfortable line-height
+- **Monospace identity** — JetBrains Mono throughout, a technical blog's character
+- **Consistency** — Every interaction stays restrained and unified
+
 ## Features
 
 - **HSL 3-Variable Color System** — Change 3 CSS variables to control the entire palette (light & dark)
 - **Dark Mode** — Auto-detects system preference, smooth transition, localStorage persistence
-- **Mouse Ripple Effect** — Subtle expanding wave rings follow cursor movement (desktop only)
-- **Code Copy Button** — One-click copy with language label and visual feedback
+- **Link Fill Effect** — Article links highlight with accent color fill on hover, external links show ↗ arrow
+- **Search Overlay** — Click search icon or press `Ctrl/Cmd+K` for instant full-text search (Fuse.js)
+- **Code Copy Button** — One-click copy with language label
 - **Reading Progress Bar** — Fixed top progress indicator for articles
-- **Back to Top** — Appears on scroll, smooth scroll back
+- **Back to Top** — Circular button, appears on scroll
 - **Collapsible TOC** — Table of contents with `<details>` toggle
+- **Archive Page** — Categories (grid cards with progress bars) + Tags (compact cloud) + Timeline (by year)
 - **Featured Hero Card** — Latest post as large card on homepage
 - **Compact Post Cards** — Thumbnail + metadata + excerpt layout
 - **Breadcrumb Navigation** — With JSON-LD structured data
@@ -24,9 +35,8 @@ A minimalist, monospace Hugo theme. Zero frameworks, pure CSS, HSL color system.
 - **AI Crawler Blocking** — robots.txt blocks 30+ AI bots
 - **Baidu SEO** — Dedicated Baidu sitemap
 - **Responsive** — Mobile-first, works on all devices
-- **CJK Ready** — `hasCJKLanguage: true`, optimized for Chinese content
-- **Pure CSS Animations** — fadeInUp, hover transitions, staggered delays, 60fps
-- **Fuse.js Search** — Client-side full-text search
+- **CJK Ready** — `hasCJKLanguage: true`, line-height 1.9 for Chinese content
+- **Pure CSS Animations** — Subtle fadeInUp (6px, 0.35s), fast transitions, 60fps
 - **Zero Dependencies** — No Tailwind, no Bootstrap, no JS frameworks
 
 ## Quick Start
@@ -85,15 +95,12 @@ menu:
     - name: "首页"
       url: /
       weight: 1
-    - name: "分类"
+    - name: "归档"
       url: /categories/
       weight: 2
-    - name: "标签"
-      url: /tags/
+    - name: "关于"
+      url: /about/
       weight: 3
-    - name: "搜索"
-      url: /search/
-      weight: 4
 
 markup:
   goldmark:
@@ -120,8 +127,8 @@ The entire color scheme is controlled by 3 HSL variables in `assets/css/main.css
 
 ```css
 :root {
-  --bg-h: 0;      /* Hue (0-360) */
-  --bg-s: 0%;     /* Saturation */
+  --bg-h: 30;     /* Hue (0-360) */
+  --bg-s: 5%;     /* Saturation */
   --bg-l: 99%;    /* Lightness — light mode */
 }
 
@@ -130,7 +137,7 @@ The entire color scheme is controlled by 3 HSL variables in `assets/css/main.css
 }
 ```
 
-All other colors (text, borders, shadows, selections) are **automatically derived**. Change these 3 values and everything adapts.
+All other colors (text, borders, backgrounds) are **automatically derived**. Change these 3 values and everything adapts.
 
 Examples:
 - Warm paper: `--bg-h: 40; --bg-s: 20%; --bg-l: 97%`
@@ -162,25 +169,23 @@ keywords:
 soneblog-theme/
 ├── archetypes/posts.md          # Article template
 ├── assets/
-│   ├── css/main.css             # All styles (~1700 lines)
+│   ├── css/main.css             # All styles
 │   └── js/
 │       ├── theme.js             # Dark mode toggle
-│       ├── code-copy.js         # Code copy + back-to-top + reading progress
-│       ├── search.js            # Fuse.js search
-│       └── ripple.js            # Mouse ripple effect
+│       ├── code-copy.js         # Code copy + back-to-top + reading progress + TOC spy
+│       └── search.js            # Search overlay (Fuse.js)
 ├── layouts/
 │   ├── _default/
 │   │   ├── baseof.html          # Base template
 │   │   ├── single.html          # Article page
 │   │   ├── list.html            # List page
-│   │   ├── search.html          # Search page
-│   │   └── terms.html           # Taxonomy page
+│   │   ├── search.html          # Search page (fallback)
+│   │   └── terms.html           # Archive page (categories + tags + timeline)
 │   ├── partials/
 │   │   ├── head.html            # SEO meta + JSON-LD
-│   │   ├── header.html          # Sticky header
+│   │   ├── header.html          # Sticky header + search icon
 │   │   ├── footer.html          # Footer
-│   │   ├── breadcrumb.html      # Breadcrumb + JSON-LD
-│   │   └── toc.html             # Table of contents
+│   │   └── breadcrumb.html      # Breadcrumb + JSON-LD
 │   ├── index.html               # Homepage
 │   ├── 404.html                 # 404 page with ASCII art
 │   └── page/single.html         # Static pages

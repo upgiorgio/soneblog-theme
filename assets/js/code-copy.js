@@ -73,4 +73,35 @@ document.addEventListener('DOMContentLoaded', function() {
       progressBar.style.width = pct + '%';
     }, { passive: true });
   }
+
+  // === TOC scroll spy ===
+  var tocLinks = document.querySelectorAll('.toc a');
+  var headings = [];
+  tocLinks.forEach(function(a) {
+    var id = a.getAttribute('href');
+    if (!id) return;
+    id = id.replace('#', '');
+    var el = document.getElementById(id);
+    if (el) headings.push({ el: el, link: a });
+  });
+  if (headings.length) {
+    window.addEventListener('scroll', function() {
+      var current = '';
+      headings.forEach(function(h) {
+        if (h.el.getBoundingClientRect().top <= 100) current = h.link.getAttribute('href');
+      });
+      tocLinks.forEach(function(a) {
+        a.classList.toggle('active', a.getAttribute('href') === current);
+      });
+    }, { passive: true });
+  }
+
+  // === Wrap tables in overflow container ===
+  var tables = document.querySelectorAll('.article-body > table');
+  tables.forEach(function(table) {
+    var wrapper = document.createElement('div');
+    wrapper.className = 'table-wrapper';
+    table.parentNode.insertBefore(wrapper, table);
+    wrapper.appendChild(table);
+  });
 });

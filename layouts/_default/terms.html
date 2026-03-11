@@ -1,12 +1,74 @@
 {{ define "main" }}
-<h1 class="page-title fade-in">{{ .Title }}</h1>
+{{ $totalPosts := len (where .Site.RegularPages "Section" "posts") }}
+<header class="archive-header fade-in">
+  <h1 class="page-title">归档</h1>
+  <p class="archive-subtitle">{{ $totalPosts }} 篇文章</p>
+</header>
 
-<div class="taxonomy-grid stagger-in">
-  {{ range $i, $t := .Data.Terms.ByCount }}
-  <a href="{{ $t.Page.Permalink }}" class="taxonomy-card fade-in" style="--i:{{ $i }}">
-    <span class="taxonomy-name">{{ $t.Page.Title }}</span>
-    <span class="taxonomy-badge">{{ $t.Count }}</span>
-  </a>
+<!-- Categories -->
+{{ with .Site.Taxonomies.categories }}
+{{ $maxCount := 1 }}
+{{ range $name, $pages := . }}
+  {{ if gt (len $pages) $maxCount }}{{ $maxCount = len $pages }}{{ end }}
+{{ end }}
+<section class="archive-section fade-in" style="--i:1">
+  <h2 class="archive-section-title">
+    <span class="archive-section-icon">//</span> 分类
+  </h2>
+  <div class="category-grid">
+    {{ range $i, $e := .Alphabetical }}
+    <a href="{{ .Page.Permalink }}" class="category-card fade-in" style="--i:{{ add $i 2 }}; --ratio: {{ div (float (len .Pages)) (float $maxCount) }}">
+      <span class="category-name">{{ .Term }}</span>
+      <span class="category-count">{{ len .Pages }}</span>
+      <span class="category-bar" aria-hidden="true"></span>
+    </a>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+
+<!-- Tags -->
+{{ with .Site.Taxonomies.tags }}
+<section class="archive-section fade-in" style="--i:3">
+  <h2 class="archive-section-title">
+    <span class="archive-section-icon">#</span> 标签
+  </h2>
+  <div class="tag-cloud">
+    {{ range $i, $e := .ByCount }}
+    <a href="{{ .Page.Permalink }}" class="tag-chip fade-in" style="--i:{{ add $i 4 }}">
+      <span>#{{ .Term }}</span>
+      <sup>{{ .Count }}</sup>
+    </a>
+    {{ end }}
+  </div>
+</section>
+{{ end }}
+
+<!-- All posts timeline -->
+<section class="archive-section fade-in" style="--i:5">
+  <h2 class="archive-section-title">
+    <span class="archive-section-icon">&gt;</span> 时间线
+  </h2>
+  {{ $pages := where .Site.RegularPages "Section" "posts" }}
+  {{ range $yi, $yearGroup := $pages.GroupByDate "2006" }}
+  <div class="timeline-group fade-in" style="--i:{{ add $yi 6 }}">
+    <div class="timeline-year-header">
+      <span class="timeline-year-num">{{ .Key }}</span>
+      <span class="timeline-year-count">{{ len .Pages }} 篇</span>
+      <span class="timeline-year-line" aria-hidden="true"></span>
+    </div>
+    <ul class="timeline-entries">
+      {{ range $pi, $page := .Pages }}
+      <li class="timeline-entry fade-in" style="--i:{{ add $pi 7 }}">
+        <a href="{{ .Permalink }}">
+          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "01-02" }}</time>
+          <span class="timeline-dot" aria-hidden="true"></span>
+          <span class="timeline-title">{{ .Title }}</span>
+        </a>
+      </li>
+      {{ end }}
+    </ul>
+  </div>
   {{ end }}
-</div>
+</section>
 {{ end }}
